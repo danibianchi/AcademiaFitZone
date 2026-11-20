@@ -1,12 +1,18 @@
 {
   "name": "academia-fitzone",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Sistema de gestão da academia FitZone",
-  "engines": { "node": ">=22.8.0" },
+  "engines": { "node": ">=22.16.0" },
   "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "start:demo": "node src/server.js --demo",
     "test": "node --test --test-isolation=none",
     "demo": "node examples/atendimento.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mysql2": "^3.14.0"
   }
 }

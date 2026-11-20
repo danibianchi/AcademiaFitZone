@@ -1,0 +1,12 @@
+{
+  "name": "academia-fitzone",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Sistema de gestão da academia FitZone",
+  "engines": { "node": ">=22.8.0" },
+  "scripts": {
+    "test": "node --test --test-isolation=none",
+    "demo": "node examples/atendimento.js"
+  }
+}

@@ -18,9 +18,9 @@
 
 ## Sobre o projeto
 
-O FitZone reúne o atendimento da recepção em um sistema web: cadastro de alunos e planos, registro de pagamentos, controle de entrada e consulta de históricos.
+O FitZone reúne o atendimento da recepção em um sistema web: cadastro de alunos e planos, captura de foto pela webcam, registro de pagamentos, controle de entrada e consulta de históricos.
 
-A interface usa preto e laranja, navegação no topo e uma ficha de atendimento para o aluno selecionado. O sistema aplica as regras de vencimento e matrícula antes de permitir o check-in.
+A interface utiliza tema escuro em preto e laranja, cabeçalho fixo que se compacta ao rolar a página, navegação fluida e uma ficha de atendimento para o aluno selecionado. O sistema aplica as regras de vencimento e matrícula antes de permitir o check-in e protege os dados sensíveis (LGPD) mascarando o CPF nas telas de exibição.
 
 ## Executar a demonstração
 
@@ -42,22 +42,29 @@ A demonstração começa com três planos de exemplo e nenhum aluno. **Os regist
 
 ### Primeiro atendimento
 
-1. Em **Alunos**, cadastrar um aluno fictício, selecionar o plano e conferir as datas de início e vencimento.
-2. Em **Atendimento**, buscar pelo nome ou CPF e selecionar o cadastro.
-3. Clicar em **Registrar check-in** para avaliar e registrar a tentativa de entrada.
+1. Em **Alunos** ou **+ Cadastrar aluno**, cadastrar um aluno fictício (com máscaras automáticas de CPF e telefone), capturar opcionalmente a **foto pela webcam** e conferir as datas de início e vencimento.
+2. Em **Atendimento**, buscar pelo nome ou CPF e clicar no **card do aluno** para abrir a ficha.
+3. Clicar em **Registrar check-in** para avaliar a entrada (*Check-in registrado* quando liberado ou *Tentativa registrada no histórico* quando bloqueado).
 4. Para regularizar a mensalidade, usar **Registrar pagamento** e conferir o novo vencimento.
-5. Fazer outro check-in para reavaliar o acesso ou abrir **Ver históricos** para consultar os registros.
+5. Fazer outro check-in para reavaliar o acesso ou abrir **Ver históricos** para consultar e filtrar os registros.
 
 ## Funcionalidades
 
 | Área | Operações disponíveis |
 | --- | --- |
-| **Alunos** | Cadastrar, editar, buscar por nome ou CPF e filtrar pela situação da matrícula. |
+| **Alunos** | Cadastrar e editar com máscaras numéricas (CPF e telefone), capturar foto pela webcam, buscar por nome ou CPF e filtrar pela situação da matrícula. |
 | **Planos** | Cadastrar e editar nome, valor e duração; ativar ou desativar para novas matrículas. |
-| **Check-in** | Avaliar o acesso e registrar todas as tentativas, permitidas ou bloqueadas. |
+| **Check-in** | Avaliar o acesso, exibir identificação com foto e registrar entradas permitidas ou tentativas bloqueadas. |
 | **Pagamentos** | Conferir o valor do plano, registrar o pagamento e calcular o novo vencimento. |
 | **Matrículas** | Trocar de plano, cancelar e reativar a matrícula. |
-| **Históricos** | Consultar pagamentos e tentativas de entrada do aluno selecionado. |
+| **Históricos** | Consultar pagamentos e entradas do aluno selecionado com barra de busca e filtro por tipo de registro. |
+
+### Diferenciais de interface e segurança
+
+- **Foto do aluno no ato pela webcam:** captura integrada ao cadastro e à edição sem sair do modal, exibindo o retrato na lista de atendimento, na ficha, na tabela de alunos e nos históricos.
+- **Proteção de dados (LGPD):** o CPF do aluno cadastrado é exibido parcialmente mascarado (`***.XXX.XXX-**`) em todas as telas do sistema, preservando dados sensíveis na recepção.
+- **Máscaras e validação numérica:** CPF (11 dígitos) e telefone (10 ou 11 dígitos) aplicam máscara automática durante a digitação e bloqueiam caracteres não numéricos tanto na interface quanto na API.
+- **Navegação e usabilidade:** cards de atendimento 100% clicáveis, cabeçalho fixo compacto ao rolar a página, botão **Voltar** em todas as telas e transições suaves.
 
 A exclusão física de alunos e planos só é permitida quando não existem vínculos a preservar. Cancelamento e desativação mantêm os históricos.
 
@@ -128,6 +135,8 @@ New-NetFirewallRule -Name 'FitZoneLAN3001' -DisplayName 'FitZone - Rede local (3
 ```
 
 A regra permite somente clientes da sub-rede local na porta indicada para o Node.js. A aplicação ainda não tem login; usar em uma rede de confiança com dados fictícios.
+
+> **Sobre o uso da webcam:** nos navegadores modernos, a captura de foto funciona diretamente em `http://127.0.0.1` ou `http://localhost`. Ao acessar por outro aparelho via IP na rede local, o navegador do cliente pode exigir HTTPS ou configuração de origem segura para liberar a câmera.
 
 ## Executar com MySQL
 

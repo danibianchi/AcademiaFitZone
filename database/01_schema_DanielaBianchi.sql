@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS tb_alunos (
   data_inicio_plano DATE NOT NULL,
   data_vencimento DATE NOT NULL,
   status_matricula ENUM('ATIVO', 'CANCELADO') NOT NULL DEFAULT 'ATIVO',
+  foto MEDIUMTEXT NULL,
   CONSTRAINT fk_alunos_plano FOREIGN KEY (id_plano)
     REFERENCES tb_planos(id_plano)
     ON UPDATE CASCADE ON DELETE RESTRICT

@@ -33,6 +33,21 @@ export function dadosPlano(dados) {
   };
 }
 
+export function validarTelefone(valor) {
+  if (typeof valor !== 'string' || !/^(\d{10,11}|\(\d{2}\)\s?\d{4,5}-\d{4})$/.test(valor.trim())) {
+    falhar('TELEFONE_INVALIDO', 'Informe um telefone válido com DDD (somente números, 10 ou 11 dígitos).');
+  }
+  return valor.replace(/\D/g, '');
+}
+
+export function validarFoto(valor) {
+  if (valor === undefined || valor === null || valor === '') return null;
+  if (typeof valor !== 'string' || valor.length > 15000 || !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(valor)) {
+    falhar('FOTO_INVALIDA', 'A foto enviada não é válida.');
+  }
+  return valor;
+}
+
 export function dadosAluno(dados, hoje) {
   const nascimento = dados.data_nascimento;
   validarData(nascimento);
@@ -44,11 +59,12 @@ export function dadosAluno(dados, hoje) {
   return {
     nome: texto(dados.nome, 'Nome do aluno', 120),
     cpf: validarCpf(dados.cpf),
-    telefone: texto(dados.telefone, 'Telefone', 20),
+    telefone: validarTelefone(dados.telefone),
     data_nascimento: nascimento,
     id_plano: id(dados.id_plano),
     data_inicio_plano: inicio,
     data_vencimento: vencimento,
+    foto: validarFoto(dados.foto),
   };
 }
 

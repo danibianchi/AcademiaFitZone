@@ -48,6 +48,7 @@ test('HTTP: erros de CPF, referências, valores e identificadores não geram alt
   const { chamar } = await fixture(t);
   assert.equal((await chamar('/api/alunos', 'POST', dadosAluno)).status, 409);
   assert.equal((await chamar('/api/alunos', 'POST', { ...dadosAluno, cpf: '123' })).status, 422);
+  assert.equal((await chamar('/api/alunos', 'POST', { ...dadosAluno, telefone: 'com-texto' })).status, 422);
   assert.equal((await chamar('/api/alunos/999')).status, 404);
   assert.equal((await chamar('/api/alunos/1abc')).status, 422);
   assert.equal((await chamar('/api/alunos/1/pagamentos', 'POST', { valor_pago: '1.00' })).status, 422);

@@ -25,11 +25,11 @@ export function criarRepositorioMysql(pool) {
         return plano(numero);
       },
       async inserirAluno(a) {
-        const r = await sql('INSERT INTO tb_alunos (nome, cpf, telefone, data_nascimento, id_plano, data_inicio_plano, data_vencimento, status_matricula) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [a.nome, a.cpf, a.telefone, a.data_nascimento, a.id_plano, a.data_inicio_plano, a.data_vencimento, a.status_matricula]);
+        const r = await sql('INSERT INTO tb_alunos (nome, cpf, telefone, data_nascimento, id_plano, data_inicio_plano, data_vencimento, status_matricula, foto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [a.nome, a.cpf, a.telefone, a.data_nascimento, a.id_plano, a.data_inicio_plano, a.data_vencimento, a.status_matricula, a.foto ?? null]);
         return aluno(r.insertId);
       },
       async atualizarAluno(numero, a) {
-        await sql('UPDATE tb_alunos SET nome=?, cpf=?, telefone=?, data_nascimento=?, id_plano=?, data_inicio_plano=?, data_vencimento=?, status_matricula=? WHERE id_aluno=?', [a.nome, a.cpf, a.telefone, a.data_nascimento, a.id_plano, a.data_inicio_plano, a.data_vencimento, a.status_matricula, numero]);
+        await sql('UPDATE tb_alunos SET nome=?, cpf=?, telefone=?, data_nascimento=?, id_plano=?, data_inicio_plano=?, data_vencimento=?, status_matricula=?, foto=? WHERE id_aluno=?', [a.nome, a.cpf, a.telefone, a.data_nascimento, a.id_plano, a.data_inicio_plano, a.data_vencimento, a.status_matricula, a.foto ?? null, numero]);
         return aluno(numero);
       },
       async inserirPagamento(p) {

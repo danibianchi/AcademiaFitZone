@@ -25,7 +25,7 @@ export function criarSite(api, { redeLocal = false } = {}) {
       res.writeHead(200, {
         'Content-Type': arquivo[1], 'Cache-Control': 'no-store',
         'X-Content-Type-Options': 'nosniff',
-        'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+        'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: mediastream:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
       });
       res.end(req.method === 'HEAD' ? undefined : conteudo);
     } catch { res.writeHead(500); res.end('Não foi possível abrir a página.'); }

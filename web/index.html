@@ -27,7 +27,8 @@
     </header>
     <div class="principal">
       <header class="topo">
-        <div>
+        <div class="topo-titulo">
+          <button type="button" id="botao-voltar" class="secundario botao-voltar" data-acao="voltar" aria-label="Voltar">← Voltar</button>
           <h1 id="titulo-tela">Atendimento</h1>
         </div>
         <div class="topo-acoes">
@@ -70,9 +71,12 @@
             <div id="ficha" class="painel ficha">
               <div class="vazio">
                 <h2>Pronto para atender</h2>
-                <p>Localize um aluno e selecione o cadastro para registrar a entrada ou o pagamento.</p>
+                <p>Localize um aluno e clique no card para registrar a entrada ou o pagamento.</p>
               </div>
             </div>
+          </div>
+          <div class="rodape-secao">
+            <button type="button" class="secundario botao-voltar" data-acao="voltar">← Voltar</button>
           </div>
         </section>
         <section id="tela-alunos" aria-label="Alunos" hidden>
@@ -97,11 +101,17 @@
               </table>
             </div>
           </div>
+          <div class="rodape-secao">
+            <button type="button" class="secundario botao-voltar" data-acao="voltar">← Voltar</button>
+          </div>
         </section>
         <section id="tela-planos" aria-label="Planos" hidden>
           <div class="secao-acoes">
             <p>Valores e duração dos planos oferecidos pela academia.</p>
-            <button type="button" data-acao="novo-plano">+ Cadastrar plano</button>
+            <div class="acoes-grupo">
+              <button type="button" class="secundario botao-voltar" data-acao="voltar">← Voltar</button>
+              <button type="button" data-acao="novo-plano">+ Cadastrar plano</button>
+            </div>
           </div>
           <div class="painel rolagem-tabela">
             <table>
@@ -118,11 +128,39 @@
               <tbody id="tabela-planos"></tbody>
             </table>
           </div>
+          <div class="rodape-secao">
+            <button type="button" class="secundario botao-voltar" data-acao="voltar">← Voltar</button>
+          </div>
         </section>
         <section id="tela-historicos" aria-label="Históricos" hidden>
+          <div class="barra-busca barra-busca-historico">
+            <div class="campo busca">
+              <label for="busca-historico">Buscar no histórico</label>
+              <input id="busca-historico" type="search" placeholder="Filtrar por data, valor, situação, observação ou buscar outro aluno" maxlength="120" autocomplete="off">
+            </div>
+            <div class="campo">
+              <label for="filtro-historico-tipo">Exibir</label>
+              <select id="filtro-historico-tipo">
+                <option value="">Todos os registros</option>
+                <option value="pagamentos">Somente pagamentos</option>
+                <option value="checkins">Somente entradas</option>
+                <option value="permitido">Entradas permitidas</option>
+                <option value="bloqueado">Entradas bloqueadas</option>
+              </select>
+            </div>
+            <button type="button" class="secundario botao-voltar" data-acao="voltar">← Voltar</button>
+          </div>
           <div id="historicos"></div>
+          <div class="rodape-secao">
+            <button type="button" class="secundario botao-voltar" data-acao="voltar">← Voltar</button>
+          </div>
         </section>
-        <footer class="rodape">FitZone · Gestão da academia
+        <footer class="rodape">
+          <span>FitZone · Gestão da academia</span>
+          <a href="https://github.com/danibianchi/AcademiaFitZone" target="_blank" rel="noopener noreferrer" class="link-git">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+            <span>GitHub · Daniela Bianchi (AcademiaFitZone)</span>
+          </a>
         </footer>
       </main>
     </div>
@@ -134,6 +172,28 @@
         </div>
         <p class="erro-form" role="alert" hidden></p>
         <input type="hidden" name="id_aluno">
+        <input type="hidden" name="foto" id="aluno-foto">
+        <div class="campo-foto">
+          <div class="foto-quadro">
+            <img id="foto-preview" alt="Foto do aluno" hidden>
+            <video id="camera-video" autoplay playsinline muted hidden></video>
+            <div id="foto-vazia" class="foto-vazia" aria-hidden="true">
+              <span>📷</span>
+              <small>Sem foto</small>
+            </div>
+            <canvas id="camera-canvas" width="160" height="160" hidden></canvas>
+          </div>
+          <div class="foto-controles">
+            <span class="foto-rotulo">Foto do aluno (Webcam)</span>
+            <p class="discreto">Capture a foto no ato pela câmera para identificação na ficha de atendimento.</p>
+            <div class="foto-botoes">
+              <button type="button" class="secundario" id="btn-abrir-camera" data-camera="abrir">Ativar webcam</button>
+              <button type="button" id="btn-capturar-foto" data-camera="capturar" hidden>Tirar foto</button>
+              <button type="button" class="secundario" id="btn-fechar-camera" data-camera="fechar" hidden>Cancelar câmera</button>
+              <button type="button" class="secundario" id="btn-remover-foto" data-camera="remover" hidden>Remover foto</button>
+            </div>
+          </div>
+        </div>
         <div class="campo">
           <label for="aluno-nome">Nome completo</label>
           <input id="aluno-nome" name="nome" required maxlength="120" autocomplete="name">
@@ -141,7 +201,7 @@
         <div class="duas-colunas">
           <div class="campo">
             <label for="aluno-cpf">CPF</label>
-            <input id="aluno-cpf" name="cpf" required maxlength="14" inputmode="numeric" placeholder="000.000.000-00">
+            <input id="aluno-cpf" name="cpf" required maxlength="14" inputmode="numeric" placeholder="000.000.000-00" autocomplete="off">
           </div>
           <div class="campo">
             <label for="aluno-nascimento">Data de nascimento</label>
@@ -150,7 +210,7 @@
         </div>
         <div class="campo">
           <label for="aluno-telefone">Telefone</label>
-          <input id="aluno-telefone" name="telefone" type="tel" required maxlength="20" autocomplete="tel">
+          <input id="aluno-telefone" name="telefone" type="tel" required maxlength="15" inputmode="numeric" placeholder="(00) 00000-0000" autocomplete="tel">
         </div>
         <fieldset id="vinculo-inicial">
           <legend>Plano inicial</legend>

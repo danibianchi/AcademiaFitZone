@@ -3,6 +3,7 @@ import { criarAcademia } from './application/academia.js';
 import { criarHandler } from './http/api.js';
 import { criarRepositorioMemoria } from './infrastructure/memoria.js';
 import { conectarMysql } from './infrastructure/mysql.js';
+import { criarSite } from './http/site.js';
 
 const demonstracao = process.argv.includes('--demo');
 const host = process.env.HOST ?? '127.0.0.1';
@@ -14,7 +15,15 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('PORT i
 
 try {
   const repo = demonstracao ? criarRepositorioMemoria() : await conectarMysql();
-  const handler = criarHandler(criarAcademia(repo), repo, { origemPermitida: process.env.APP_ORIGIN ?? '' });
+  const academia = criarAcademia(repo);
+  if (demonstracao) {
+    for (const plano of [
+      { nome: 'Mensal', valor: '119.90', duracao_dias: 30 },
+      { nome: 'Trimestral', valor: '319.90', duracao_dias: 90 },
+      { nome: 'Anual', valor: '1099.90', duracao_dias: 365 },
+    ]) await academia.criarPlano(plano);
+  }
+  const handler = criarSite(criarHandler(academia, repo, { origemPermitida: process.env.APP_ORIGIN ?? '' }));
   let server;
   if (demonstracao) {
     server = createServer(handler);
@@ -34,7 +43,7 @@ try {
     console.error('Não foi possível iniciar a API:', error.code ?? 'ERRO');
     await repo.fechar(); process.exitCode = 1;
   });
-  server.listen(port, host, () => console.log(`API FitZone em http://${host}:${port}/api/saude (${repo.modo})`));
+  server.listen(port, host, () => console.log(`FitZone em http://${host === '::1' ? '[::1]' : host}:${port}/ (${repo.modo})`));
   const encerrar = () => server.close(async () => { await repo.fechar(); });
   process.once('SIGINT', encerrar); process.once('SIGTERM', encerrar);
 } catch (error) {

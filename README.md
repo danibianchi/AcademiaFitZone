@@ -2,7 +2,7 @@
 
 Projeto de Daniela Vanessa Bianchi, da disciplina de Laboratório de Engenharia de Software da FATEC Indaiatuba.
 
-O sistema controla alunos, planos, pagamentos e check-ins. Esta versão contém a API e as regras de negócio, com MySQL para persistência e memória para demonstração. As telas e os relatórios ainda serão construídos.
+O sistema controla alunos, planos, pagamentos e check-ins. Esta versão contém telas de atendimento, alunos, planos e históricos, ligadas à API. Há um adaptador MySQL para persistência e um modo em memória para demonstração. Os relatórios ainda serão construídos.
 
 ## Funcionalidades
 
@@ -28,7 +28,20 @@ npm.cmd test
 npm.cmd run start:demo
 ```
 
-Consultar http://127.0.0.1:3000/api/saude deve retornar armazenamento igual a memoria. O banco começa vazio e os dados são apagados ao encerrar. Para parar, pressionar Ctrl+C no terminal. Esse modo não comprova persistência no MySQL nem execução pelo Express.
+Abrir http://127.0.0.1:3000/ no navegador. O aviso no topo identifica a demonstração. Ela começa com três planos de exemplo e nenhum aluno; os registros são apagados ao encerrar. Para parar, pressionar Ctrl+C no terminal. Esse modo não comprova persistência no MySQL nem execução pelo Express.
+
+### Usar as telas
+
+1. Em **Planos**, consultar os exemplos ou cadastrar outro plano.
+2. Em **Alunos**, cadastrar um aluno fictício com CPF válido, selecionar o plano e conferir início e vencimento.
+3. Em **Atendimento**, buscar por nome ou CPF e selecionar o aluno.
+4. Usar **Registrar check-in** para obter a decisão de acesso. A tentativa fica no histórico mesmo quando bloqueada.
+5. Usar **Registrar pagamento**, conferir o valor e confirmar. O sistema apresenta o novo vencimento; fazer outro check-in se desejar reavaliar o acesso.
+6. Em **Ver históricos**, consultar pagamentos e tentativas do aluno selecionado.
+
+O atendimento também oferece edição de cadastro, troca de plano, cancelamento e reativação. A interface mostra a data operacional do servidor; a troca de plano apresenta uma previsão do vencimento para revisão antes da confirmação. Pagar não reativa matrícula cancelada.
+
+A interface se adapta a telas menores e não depende de CDNs, fontes externas ou instalação de pacotes. Não foram incluídos dados reais de alunos.
 
 ## Executar com MySQL e Express
 
@@ -98,9 +111,10 @@ src/application/     Casos de uso e limites transacionais
 src/infrastructure/  MySQL e memória
 src/http/            Rotas, JSON e respostas
 src/server.js        Inicialização
+web/                 Telas em HTML, CSS e JavaScript
 ```
 
-A proposta documental previa Prisma. Nesta implementação inicial foi escolhido MySQL2 com SQL parametrizado para deixar explícitas as consultas, transações e bloqueios. Express continua como servidor normal. O handler HTTP é exercitado nos testes com o servidor nativo do Node. Essa escolha deverá ser refletida na arquitetura documental ao consolidar a implementação.
+A proposta documental previa Prisma e React/TypeScript. Nesta implementação inicial foram escolhidos MySQL2 com SQL parametrizado e interface em HTML, CSS e JavaScript. As telas funcionam sem etapa de compilação e sem downloads adicionais no modo de demonstração. Express continua como servidor normal. O handler HTTP é exercitado nos testes com o servidor nativo do Node. Essas escolhas deverão ser refletidas na arquitetura documental ao consolidar a implementação.
 
 O pagamento consulta aluno e plano vigente na mesma transação, bloqueando as linhas com FOR UPDATE. Ele grava o lançamento e o vencimento juntos e reverte em caso de erro. O check-in grava a decisão antes da confirmação. Pagamentos mantêm o valor pago e os vencimentos; a referência ao plano não preserva todas as alterações históricas do cadastro do plano.
 
@@ -108,8 +122,8 @@ Referências: [Express](https://expressjs.com/en/guide/error-handling/), [MySQL2
 
 ## Validação e próximos passos
 
-Os testes verificam domínio, HTTP, erros, duplicidade, históricos, renovação simultânea em memória e contrato de commit/rollback com uma conexão MySQL simulada. Não substituem testes contra MySQL real ou contra a inicialização pelo Express.
+Os testes verificam domínio, HTTP, erros, duplicidade, históricos, renovação simultânea em memória e contrato de commit/rollback com uma conexão MySQL simulada. Também conferem arquivos públicos da interface, envio pela mesma origem e bloqueio de acesso a arquivos privados. Não substituem testes contra MySQL real ou contra a inicialização pelo Express.
 
-Faltam validar o banco real, adicionar telas React/TypeScript, relatórios, paginação e autenticação. Desempenho, disponibilidade e usabilidade ainda não foram medidos.
+Faltam validar o banco real e a interface em navegador, adicionar relatórios, paginação e autenticação. A inspeção visual e os testes de interação no navegador ficaram pendentes porque o controle do navegador foi bloqueado pelo ambiente. Desempenho, disponibilidade e usabilidade ainda não foram medidos.
 
 Repositório: https://github.com/danibianchi/AcademiaFitZone

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Atendimento e gestão da academia FitZone">
+    <title>FitZone · Gestão da academia</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <a class="pular" href="#conteudo">Ir para o conteúdo</a>
+    <aside class="lateral">
+      <div class="marca">
+        <span class="simbolo" aria-hidden="true">FZ</span>
+        <div>
+          <strong>FitZone</strong>
+          <span>Gestão da academia</span>
+        </div>
+      </div>
+      <nav aria-label="Menu principal">
+        <button type="button" data-tela="atendimento" aria-current="page">Atendimento</button>
+        <button type="button" data-tela="alunos">Alunos</button>
+        <button type="button" data-tela="planos">Planos</button>
+        <button type="button" data-tela="historicos">Históricos</button>
+      </nav>
+      <div class="rodape-lateral">Recepção <small>Ambiente de desenvolvimento</small>
+      </div>
+    </aside>
+    <div class="principal">
+      <header class="topo">
+        <div>
+          <span class="rotulo">ACADEMIA FITZONE</span>
+          <h1 id="titulo-tela">Atendimento</h1>
+        </div>
+        <div class="topo-acoes">
+          <span id="conexao" class="etiqueta">Conectando…</span>
+          <button type="button" class="secundario" data-acao="atualizar">Atualizar</button>
+        </div>
+      </header>
+      <main id="conteudo">
+        <div id="aviso-demo" class="aviso" hidden>
+          <strong>Modo de demonstração</strong>
+          <span>Use dados fictícios. Os registros serão apagados ao reiniciar o sistema.</span>
+        </div>
+        <p id="mensagem" role="status" aria-live="polite" hidden></p>
+        <noscript>Ative o JavaScript do navegador para usar o sistema.</noscript>
+        <div id="barra-busca" class="barra-busca">
+          <div class="campo busca">
+            <label for="busca-aluno">Localizar aluno</label>
+            <input id="busca-aluno" type="search" placeholder="Digite o nome ou CPF" maxlength="120" autocomplete="off">
+          </div>
+          <div class="campo">
+            <label for="filtro-status">Matrícula</label>
+            <select id="filtro-status">
+              <option value="">Todas</option>
+              <option value="ATIVO">Ativa</option>
+              <option value="CANCELADO">Cancelada</option>
+            </select>
+          </div>
+          <button type="button" data-acao="novo-aluno">+ Cadastrar aluno</button>
+        </div>
+        <section id="tela-atendimento" aria-label="Atendimento">
+          <div class="grade-atendimento">
+            <div class="painel">
+              <div class="painel-cabecalho">
+                <h2>Alunos encontrados</h2>
+                <span id="quantidade-atendimento" class="discreto"></span>
+              </div>
+              <div id="lista-atendimento"></div>
+            </div>
+            <div id="ficha" class="painel ficha">
+              <div class="vazio">
+                <span class="vazio-simbolo" aria-hidden="true">FZ</span>
+                <h2>Pronto para atender</h2>
+                <p>Localize um aluno e selecione o cadastro para registrar a entrada ou o pagamento.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="tela-alunos" aria-label="Alunos" hidden>
+          <div class="painel">
+            <div class="painel-cabecalho">
+              <h2>Cadastros</h2>
+              <span class="discreto">Até 100 resultados por busca</span>
+            </div>
+            <div class="rolagem-tabela">
+              <table>
+                <caption class="sr-only">Alunos cadastrados</caption>
+                <thead>
+                  <tr>
+                    <th>Aluno</th>
+                    <th>Plano</th>
+                    <th>Vencimento</th>
+                    <th>Matrícula</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tabela-alunos"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <section id="tela-planos" aria-label="Planos" hidden>
+          <div class="secao-acoes">
+            <p>Valores e duração dos planos oferecidos pela academia.</p>
+            <button type="button" data-acao="novo-plano">+ Cadastrar plano</button>
+          </div>
+          <div class="painel rolagem-tabela">
+            <table>
+              <caption class="sr-only">Planos cadastrados</caption>
+              <thead>
+                <tr>
+                  <th>Plano</th>
+                  <th>Valor</th>
+                  <th>Duração</th>
+                  <th>Situação</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-planos"></tbody>
+            </table>
+          </div>
+        </section>
+        <section id="tela-historicos" aria-label="Históricos" hidden>
+          <div id="historicos"></div>
+        </section>
+        <footer class="rodape">Sistema de gestão da academia FitZone <span id="data-operacional"></span>
+        </footer>
+      </main>
+    </div>
+    <dialog id="dialog-aluno" aria-labelledby="titulo-aluno">
+      <form id="form-aluno">
+        <div class="dialog-cabecalho">
+          <h2 id="titulo-aluno">Cadastrar aluno</h2>
+          <button type="button" class="fechar" data-fechar aria-label="Fechar">×</button>
+        </div>
+        <p class="erro-form" role="alert" hidden></p>
+        <input type="hidden" name="id_aluno">
+        <div class="campo">
+          <label for="aluno-nome">Nome completo</label>
+          <input id="aluno-nome" name="nome" required maxlength="120" autocomplete="name">
+        </div>
+        <div class="duas-colunas">
+          <div class="campo">
+            <label for="aluno-cpf">CPF</label>
+            <input id="aluno-cpf" name="cpf" required maxlength="14" inputmode="numeric" placeholder="000.000.000-00">
+          </div>
+          <div class="campo">
+            <label for="aluno-nascimento">Data de nascimento</label>
+            <input id="aluno-nascimento" name="data_nascimento" type="date" required>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="aluno-telefone">Telefone</label>
+          <input id="aluno-telefone" name="telefone" type="tel" required maxlength="20" autocomplete="tel">
+        </div>
+        <fieldset id="vinculo-inicial">
+          <legend>Plano inicial</legend>
+          <div class="campo">
+            <label for="aluno-plano">Plano</label>
+            <select id="aluno-plano" name="id_plano" required></select>
+          </div>
+          <div class="duas-colunas">
+            <div class="campo">
+              <label for="aluno-inicio">Início do plano</label>
+              <input id="aluno-inicio" name="data_inicio_plano" type="date" required>
+            </div>
+            <div class="campo">
+              <label for="aluno-vencimento">Vencimento</label>
+              <input id="aluno-vencimento" name="data_vencimento" type="date" required>
+            </div>
+          </div>
+        </fieldset>
+        <div class="dialog-acoes">
+          <button type="button" class="secundario" data-fechar>Cancelar</button>
+          <button type="submit">Salvar aluno</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="dialog-plano" aria-labelledby="titulo-plano">
+      <form id="form-plano">
+        <div class="dialog-cabecalho">
+          <h2 id="titulo-plano">Cadastrar plano</h2>
+          <button type="button" class="fechar" data-fechar aria-label="Fechar">×</button>
+        </div>
+        <p class="erro-form" role="alert" hidden></p>
+        <input type="hidden" name="id_plano">
+        <div class="campo">
+          <label for="plano-nome">Nome do plano</label>
+          <input id="plano-nome" name="nome" required maxlength="60">
+        </div>
+        <div class="duas-colunas">
+          <div class="campo">
+            <label for="plano-valor">Valor (R$)</label>
+            <input id="plano-valor" name="valor" type="number" step="0.01" min="0.01" max="99999999.99" required>
+          </div>
+          <div class="campo">
+            <label for="plano-duracao">Duração em dias</label>
+            <input id="plano-duracao" name="duracao_dias" type="number" step="1" min="1" max="36500" required>
+          </div>
+        </div>
+        <label class="checkbox">
+          <input type="checkbox" name="ativo" checked> Disponível para novas matrículas</label>
+        <div class="dialog-acoes">
+          <button type="button" class="secundario" data-fechar>Cancelar</button>
+          <button type="submit">Salvar plano</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="dialog-pagamento" aria-labelledby="titulo-pagamento">
+      <form id="form-pagamento">
+        <div class="dialog-cabecalho">
+          <h2 id="titulo-pagamento">Registrar pagamento</h2>
+          <button type="button" class="fechar" data-fechar aria-label="Fechar">×</button>
+        </div>
+        <p class="erro-form" role="alert" hidden></p>
+        <p id="resumo-pagamento" class="resumo"></p>
+        <p id="aviso-cancelado" class="aviso" hidden>O pagamento não reativa uma matrícula cancelada. Use também a opção Reativar matrícula.</p>
+        <div class="campo">
+          <label for="pagamento-valor">Valor recebido (R$)</label>
+          <input id="pagamento-valor" name="valor_pago" type="number" step="0.01" min="0.01" max="99999999.99" required>
+        </div>
+        <div class="campo">
+          <label for="pagamento-observacao">Observação (opcional)</label>
+          <textarea id="pagamento-observacao" name="observacao" maxlength="150" rows="2"></textarea>
+        </div>
+        <div class="dialog-acoes">
+          <button type="button" class="secundario" data-fechar>Cancelar</button>
+          <button type="submit">Confirmar pagamento</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="dialog-vinculo" aria-labelledby="titulo-vinculo">
+      <form id="form-vinculo">
+        <div class="dialog-cabecalho">
+          <h2 id="titulo-vinculo">Trocar plano</h2>
+          <button type="button" class="fechar" data-fechar aria-label="Fechar">×</button>
+        </div>
+        <p class="erro-form" role="alert" hidden></p>
+        <input type="hidden" name="reativar">
+        <div class="campo">
+          <label for="vinculo-plano">Selecionar plano ativo</label>
+          <select id="vinculo-plano" name="id_plano" required></select>
+        </div>
+        <p id="resumo-vinculo" class="resumo"></p>
+        <div class="dialog-acoes">
+          <button type="button" class="secundario" data-fechar>Voltar</button>
+          <button type="submit">Confirmar alteração</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="dialog-confirmar" aria-labelledby="titulo-confirmar">
+      <form id="form-confirmar">
+        <div class="dialog-cabecalho">
+          <h2 id="titulo-confirmar">Confirmar operação</h2>
+          <button type="button" class="fechar" data-fechar aria-label="Fechar">×</button>
+        </div>
+        <p class="erro-form" role="alert" hidden></p>
+        <p id="texto-confirmar"></p>
+        <div class="dialog-acoes">
+          <button type="button" class="secundario" data-fechar>Voltar</button>
+          <button type="submit" class="perigo">Confirmar</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>

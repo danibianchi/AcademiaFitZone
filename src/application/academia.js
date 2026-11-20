@@ -16,6 +16,7 @@ export function criarAcademia(repositorio, hoje = hojeEmSaoPaulo) {
     return plano;
   }
   return {
+    dataOperacional: hoje,
     listarPlanos: () => repositorio.listarPlanos(),
     listarAlunos: async (busca = '', status = '') => {
       if (busca.length > 120) falhar('DADOS_INVALIDOS', 'Busca deve ter até 120 caracteres.');

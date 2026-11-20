@@ -1,129 +1,202 @@
-# Sistema de gestão da academia FitZone
+<p align="center">
+  <img src="docs/logo-fitzone.svg" alt="FitZone" width="560">
+</p>
 
-Projeto de Daniela Vanessa Bianchi, da disciplina de Laboratório de Engenharia de Software da FATEC Indaiatuba.
+<h1 align="center">Sistema de gestão da academia FitZone</h1>
 
-O sistema controla alunos, planos, pagamentos e check-ins. Esta versão contém telas de atendimento, alunos, planos e históricos, ligadas à API. Há um adaptador MySQL para persistência e um modo em memória para demonstração. Os relatórios ainda serão construídos.
+<p align="center">
+  Projeto Integrador da disciplina de Laboratório de Engenharia de Software da FATEC Indaiatuba.
+</p>
 
-## Funcionalidades
+<p align="center">
+  <a href="#sobre-o-projeto">Sobre</a> ·
+  <a href="#executar-a-demonstração">Como executar</a> ·
+  <a href="#funcionalidades">Funcionalidades</a> ·
+  <a href="#tecnologias-e-organização">Tecnologias</a> ·
+  <a href="#autoria-e-orientação">Autoria</a>
+</p>
 
-- Cadastro, edição e consulta de alunos e planos.
-- Validação dos dígitos do CPF e bloqueio de duplicidade.
-- Busca por nome, CPF e situação da matrícula.
-- Check-in em dia, com alerta de 1 a 30 dias de atraso ou bloqueado acima de 30 dias.
-- Registro de todas as tentativas de check-in, inclusive bloqueadas.
-- Pagamento com conferência de valor e cálculo do vencimento.
-- Pagamento e atualização do vencimento na mesma transação.
-- Troca de plano, cancelamento e reativação da matrícula.
-- Históricos de pagamentos e check-ins.
-- Exclusão física somente quando não existem vínculos a preservar.
+## Sobre o projeto
 
-Não há autenticação nesta versão. O servidor aceita apenas endereço de loopback e se destina ao desenvolvimento local com dados fictícios. O CPF é validado pelos dígitos, sem consultar titularidade ou situação cadastral.
+O FitZone reúne o atendimento da recepção em um sistema web: cadastro de alunos e planos, registro de pagamentos, controle de entrada e consulta de históricos.
 
-## Demonstração sem banco
+A interface usa preto e laranja, navegação no topo e uma ficha de atendimento para o aluno selecionado. O sistema aplica as regras de vencimento e matrícula antes de permitir o check-in.
 
-Requer Node.js 22.16 ou superior. A demonstração e os testes usam o servidor HTTP nativo do Node, sem instalação de dependências.
+## Executar a demonstração
+
+A demonstração funciona sem instalar dependências ou configurar banco de dados. É necessário **Node.js 22.16 ou superior**.
+
+Para baixar e iniciar o projeto:
 
 ```powershell
-npm.cmd test
+git clone https://github.com/danibianchi/AcademiaFitZone.git
+cd AcademiaFitZone
 npm.cmd run start:demo
 ```
 
-Abrir http://127.0.0.1:3000/ no navegador. O aviso no topo identifica a demonstração. Ela começa com três planos de exemplo e nenhum aluno; os registros são apagados ao encerrar. Para parar, pressionar Ctrl+C no terminal. Esse modo não comprova persistência no MySQL nem execução pelo Express.
+Depois, abrir **http://127.0.0.1:3000/** no navegador.
 
-### Usar as telas
+Se o projeto já estiver no computador, executar o comando dentro da pasta que contém o `package.json`. Na organização local da disciplina, essa pasta se chama `sistema-fitzone`.
 
-1. Em **Planos**, consultar os exemplos ou cadastrar outro plano.
-2. Em **Alunos**, cadastrar um aluno fictício com CPF válido, selecionar o plano e conferir início e vencimento.
-3. Em **Atendimento**, buscar por nome ou CPF e selecionar o aluno.
-4. Usar **Registrar check-in** para obter a decisão de acesso. A tentativa fica no histórico mesmo quando bloqueada.
-5. Usar **Registrar pagamento**, conferir o valor e confirmar. O sistema apresenta o novo vencimento; fazer outro check-in se desejar reavaliar o acesso.
-6. Em **Ver históricos**, consultar pagamentos e tentativas do aluno selecionado.
+A demonstração começa com três planos de exemplo e nenhum aluno. **Os registros ficam em memória e são apagados ao reiniciar o servidor.** Usar somente dados fictícios. Para encerrar, pressionar `Ctrl+C` no terminal.
 
-O atendimento também oferece edição de cadastro, troca de plano, cancelamento e reativação. A interface mostra a data operacional do servidor; a troca de plano apresenta uma previsão do vencimento para revisão antes da confirmação. Pagar não reativa matrícula cancelada.
+### Primeiro atendimento
 
-A interface se adapta a telas menores e não depende de CDNs, fontes externas ou instalação de pacotes. Não foram incluídos dados reais de alunos.
+1. Em **Alunos**, cadastrar um aluno fictício, selecionar o plano e conferir as datas de início e vencimento.
+2. Em **Atendimento**, buscar pelo nome ou CPF e selecionar o cadastro.
+3. Clicar em **Registrar check-in** para avaliar e registrar a tentativa de entrada.
+4. Para regularizar a mensalidade, usar **Registrar pagamento** e conferir o novo vencimento.
+5. Fazer outro check-in para reavaliar o acesso ou abrir **Ver históricos** para consultar os registros.
 
-## Executar com MySQL e Express
+## Funcionalidades
+
+| Área | Operações disponíveis |
+| --- | --- |
+| **Alunos** | Cadastrar, editar, buscar por nome ou CPF e filtrar pela situação da matrícula. |
+| **Planos** | Cadastrar e editar nome, valor e duração; ativar ou desativar para novas matrículas. |
+| **Check-in** | Avaliar o acesso e registrar todas as tentativas, permitidas ou bloqueadas. |
+| **Pagamentos** | Conferir o valor do plano, registrar o pagamento e calcular o novo vencimento. |
+| **Matrículas** | Trocar de plano, cancelar e reativar a matrícula. |
+| **Históricos** | Consultar pagamentos e tentativas de entrada do aluno selecionado. |
+
+A exclusão física de alunos e planos só é permitida quando não existem vínculos a preservar. Cancelamento e desativação mantêm os históricos.
+
+### Regras de acesso
+
+| Situação do aluno | Decisão no check-in |
+| --- | --- |
+| Matrícula ativa e mensalidade em dia | Permitir a entrada. |
+| Matrícula ativa com atraso de **1 a 30 dias** | Permitir a entrada com alerta. |
+| Matrícula ativa com atraso **superior a 30 dias** | Bloquear a entrada. |
+| Matrícula cancelada | Bloquear a entrada, independentemente do vencimento. |
+
+O pagamento antecipado preserva os dias restantes do plano. O pagamento de uma matrícula cancelada **não reativa o cadastro**: é necessário usar a operação de reativação com um plano ativo.
+
+O CPF é validado pelos dígitos verificadores e pela unicidade no cadastro. Não há consulta de titularidade ou situação cadastral.
+
+## Tecnologias e organização
+
+| Parte do sistema | Tecnologias |
+| --- | --- |
+| Interface | HTML, CSS e JavaScript, sem etapa de compilação. |
+| API | Node.js; Express no modo com MySQL. |
+| Persistência | MySQL com InnoDB e driver MySQL2. |
+| Demonstração | Servidor HTTP nativo do Node.js e repositório em memória. |
+| Testes | Executor nativo `node:test`. |
+
+```text
+src/
+├── domain/          Regras de negócio
+├── application/     Casos de uso e validações
+├── infrastructure/  Adaptadores MySQL e memória
+├── http/            Rotas, respostas e arquivos públicos
+└── server.js        Inicialização do sistema
+web/                 Interface e logo
+database/            Esquema SQL inicial
+test/                Testes automatizados
+docs/                Materiais do repositório
+```
+
+No modo MySQL, o pagamento e a atualização do vencimento usam a mesma transação. As linhas do aluno e do plano vigente são consultadas com `FOR UPDATE`; se houver falha, as alterações são revertidas. O check-in registra a decisão antes de confirmar a operação ao usuário.
+
+A implementação atual utiliza MySQL2 e JavaScript na interface. A arquitetura documental deverá ser alinhada a essas escolhas ao consolidar o projeto.
+
+## Executar com MySQL
+
+Este modo exige as dependências do projeto e o Docker Desktop em execução.
 
 1. Instalar as bibliotecas com `npm.cmd install`.
-2. Abrir o Docker Desktop.
-3. Copiar `.env.example` para `.env` e preencher MYSQL_PASSWORD e MYSQL_ROOT_PASSWORD com senhas locais distintas. O `.env` é ignorado pelo Git.
-4. Iniciar o banco e a API:
+2. Copiar `.env.example` para `.env`, caso ainda não exista uma configuração local.
+3. Preencher `MYSQL_PASSWORD` e `MYSQL_ROOT_PASSWORD` com senhas distintas. O arquivo `.env` é ignorado pelo Git.
+4. Iniciar o banco e o sistema:
 
 ```powershell
 docker compose up -d --wait
 npm.cmd start
 ```
 
-O MySQL usa a porta local 3307, o banco db_academia_fitzone e o usuário fitzone. O esquema e os três planos de exemplo são criados na primeira inicialização de um volume vazio. Depois, o volume mantém os dados. `docker compose stop` para o banco sem apagar o volume.
+| Configuração local | Valor |
+| --- | --- |
+| Aplicação | `http://127.0.0.1:3000/` |
+| Porta do MySQL | `3307` |
+| Banco de dados | `db_academia_fitzone` |
+| Usuário da aplicação | `fitzone` |
 
-A API normal exige MySQL: não muda silenciosamente para memória quando há falha de conexão. A inicialização do MySQL e do Express ainda não foi comprovada nesta etapa: o ambiente bloqueou o download das bibliotecas e a inicialização do Docker. O lockfile será gerado quando a instalação for concluída.
+O esquema e os planos de exemplo são criados na primeira inicialização de um volume vazio. O volume mantém os registros nas próximas execuções. Para parar o banco sem apagar os dados, usar `docker compose stop`.
 
-Se usar MySQL instalado diretamente, executar database/01_schema_DanielaBianchi.sql uma vez em uma base de desenvolvimento e ajustar o .env. Executar novamente o INSERT inicial desse script pode duplicar os planos.
+A aplicação exige conexão com o MySQL nesse modo; uma falha não provoca troca automática para memória. **A execução com MySQL e Express ainda precisa ser validada no ambiente completo.** A instalação das dependências e a inicialização do Docker não puderam ser concluídas no ambiente usado até esta etapa. O `package-lock.json` será gerado quando a instalação for concluída.
 
-## Endpoints
+<details>
+<summary>Usar uma instalação própria do MySQL</summary>
 
-Alterações com corpo devem enviar Content-Type application/json. Mesmo ações sem campos usam `{}`. Erros retornam os campos erro e mensagem.
+Executar [database/01_schema_DanielaBianchi.sql](database/01_schema_DanielaBianchi.sql) uma vez em uma base de desenvolvimento e ajustar o `.env`.
+
+Executar novamente o `INSERT` inicial desse script pode duplicar os planos de exemplo.
+
+</details>
+
+## Testes e estado do projeto
+
+Para executar os testes:
+
+```powershell
+npm.cmd test
+```
+
+A suíte verifica regras de negócio, requisições HTTP, duplicidade de CPF, históricos, erros de entrada, renovação simultânea em memória e o contrato de transação do adaptador MySQL com uma conexão simulada. Também confere o acesso aos arquivos públicos da interface e o bloqueio de arquivos privados.
+
+Esses testes não substituem a validação com um servidor MySQL real nem os testes de interação no navegador.
+
+| Estado | Itens |
+| --- | --- |
+| **Implementado** | Telas de atendimento e cadastros, API, regras de negócio, históricos e modo de demonstração. |
+| **Em validação** | Integração com MySQL/Express e testes de interação no navegador. |
+| **Próximas etapas** | Relatórios, paginação e autenticação. |
+
+Esta versão se destina ao desenvolvimento local com dados fictícios. Ainda não possui autenticação. Desempenho, disponibilidade e usabilidade não foram medidos.
+
+## Referência da API
+
+<details>
+<summary>Consultar endpoints e convenções</summary>
+
+Requisições de alteração com corpo devem enviar `Content-Type: application/json`. Ações sem campos usam `{}`. Respostas de erro contêm `erro` e `mensagem`.
 
 | Método | Caminho | Operação |
 | --- | --- | --- |
-| GET | /api/saude | Verificar API e armazenamento |
-| GET / POST | /api/planos | Listar ou cadastrar planos |
-| PUT / DELETE | /api/planos/:id | Editar ou excluir plano |
-| GET / POST | /api/alunos | Buscar ou cadastrar alunos |
-| GET / PATCH / DELETE | /api/alunos/:id | Consultar, editar dados ou excluir aluno |
-| POST | /api/alunos/:id/plano | Trocar plano vigente |
-| POST | /api/alunos/:id/cancelamento | Cancelar matrícula |
-| POST | /api/alunos/:id/reativacao | Reativar com um plano |
-| GET / POST | /api/alunos/:id/checkins | Consultar tentativas ou realizar check-in |
-| GET / POST | /api/alunos/:id/pagamentos | Consultar histórico ou registrar pagamento |
+| `GET` | `/api/saude` | Verificar API e armazenamento. |
+| `GET` / `POST` | `/api/planos` | Listar ou cadastrar planos. |
+| `PUT` / `DELETE` | `/api/planos/:id` | Editar ou excluir plano. |
+| `GET` / `POST` | `/api/alunos` | Buscar ou cadastrar alunos. |
+| `GET` / `PATCH` / `DELETE` | `/api/alunos/:id` | Consultar, editar ou excluir aluno. |
+| `POST` | `/api/alunos/:id/plano` | Trocar o plano vigente. |
+| `POST` | `/api/alunos/:id/cancelamento` | Cancelar a matrícula. |
+| `POST` | `/api/alunos/:id/reativacao` | Reativar a matrícula. |
+| `GET` / `POST` | `/api/alunos/:id/checkins` | Consultar tentativas ou registrar check-in. |
+| `GET` / `POST` | `/api/alunos/:id/pagamentos` | Consultar histórico ou registrar pagamento. |
 
-Busca: `/api/alunos?busca=nome-ou-cpf&status=ATIVO`. A consulta retorna até 100 alunos; os históricos retornam os últimos 100 registros em ordem decrescente. Ainda não há paginação. Plano usa PUT com todos os campos. Aluno usa PATCH; situação, plano e vencimento só mudam pelos fluxos próprios.
+Exemplo de busca: `/api/alunos?busca=nome-ou-cpf&status=ATIVO`.
 
-Check-in bloqueado retorna HTTP 201 porque a tentativa foi registrada; permitido informa a decisão. A data operacional vem do servidor no fuso America/Sao_Paulo. Horários gerados pela API são UTC; datas de nascimento, início e vencimento usam AAAA-MM-DD.
+A consulta retorna até 100 alunos. Os históricos retornam os últimos 100 registros em ordem decrescente. O plano usa `PUT` com todos os campos; o aluno usa `PATCH`. Situação, plano e vencimento só mudam pelas operações próprias.
 
-### Atendimento em PowerShell
+Uma tentativa de check-in bloqueada retorna HTTP `201` porque o registro foi criado; o campo `permitido` informa a decisão de acesso.
 
-No modo de demonstração, criar primeiro o plano e o aluno. Os dados abaixo são fictícios; o CPF é uma sequência de teste do algoritmo.
+A data operacional vem do servidor no fuso `America/Sao_Paulo`. Os horários gerados pela API são UTC. Datas de nascimento, início e vencimento usam `AAAA-MM-DD`.
 
-```powershell
-$baseFitzone = 'http://127.0.0.1:3000/api'
-$planoFitzone = Invoke-RestMethod "$baseFitzone/planos" -Method Post -ContentType 'application/json' -Body (@{
-  nome = 'Mensal'; valor = '119.90'; duracao_dias = 30
-} | ConvertTo-Json)
-$alunoFitzone = Invoke-RestMethod "$baseFitzone/alunos" -Method Post -ContentType 'application/json' -Body (@{
-  nome = 'Aluno de teste'; cpf = '52998224725'; telefone = '00000000000'
-  data_nascimento = '2000-01-01'; id_plano = $planoFitzone.id_plano
-  data_inicio_plano = '2026-09-15'; data_vencimento = '2026-10-15'
-} | ConvertTo-Json)
-$alunoIdFitzone = $alunoFitzone.id_aluno
-Invoke-RestMethod "$baseFitzone/alunos/$alunoIdFitzone/checkins" -Method Post -ContentType 'application/json' -Body '{}'
-Invoke-RestMethod "$baseFitzone/alunos/$alunoIdFitzone/pagamentos" -Method Post -ContentType 'application/json' -Body '{"valor_pago":"119.90"}'
-Invoke-RestMethod "$baseFitzone/alunos/$alunoIdFitzone/checkins" -Method Post -ContentType 'application/json' -Body '{}'
-Invoke-RestMethod "$baseFitzone/alunos/$alunoIdFitzone/checkins"
-```
+</details>
 
-## Organização e decisões
+## Referências técnicas
 
-```text
-src/domain/          Regras de negócio
-src/application/     Casos de uso e limites transacionais
-src/infrastructure/  MySQL e memória
-src/http/            Rotas, JSON e respostas
-src/server.js        Inicialização
-web/                 Telas em HTML, CSS e JavaScript
-```
+- [Express](https://expressjs.com/en/guide/error-handling/)
+- [MySQL2](https://sidorares.github.io/node-mysql2/docs)
+- [Docker Desktop](https://docs.docker.com/reference/cli/docker/desktop/start/)
 
-A proposta documental previa Prisma e React/TypeScript. Nesta implementação inicial foram escolhidos MySQL2 com SQL parametrizado e interface em HTML, CSS e JavaScript. As telas funcionam sem etapa de compilação e sem downloads adicionais no modo de demonstração. Express continua como servidor normal. O handler HTTP é exercitado nos testes com o servidor nativo do Node. Essas escolhas deverão ser refletidas na arquitetura documental ao consolidar a implementação.
+## Autoria e orientação
 
-O pagamento consulta aluno e plano vigente na mesma transação, bloqueando as linhas com FOR UPDATE. Ele grava o lançamento e o vencimento juntos e reverte em caso de erro. O check-in grava a decisão antes da confirmação. Pagamentos mantêm o valor pago e os vencimentos; a referência ao plano não preserva todas as alterações históricas do cadastro do plano.
+**Daniela Vanessa Bianchi**
 
-Referências: [Express](https://expressjs.com/en/guide/error-handling/), [MySQL2](https://sidorares.github.io/node-mysql2/docs) e [Docker Desktop](https://docs.docker.com/reference/cli/docker/desktop/start/).
+Aluna do **3º semestre de Análise e Desenvolvimento de Sistemas**, na **FATEC Indaiatuba**.
 
-## Validação e próximos passos
+**Professor:** Marlon.
 
-Os testes verificam domínio, HTTP, erros, duplicidade, históricos, renovação simultânea em memória e contrato de commit/rollback com uma conexão MySQL simulada. Também conferem arquivos públicos da interface, envio pela mesma origem e bloqueio de acesso a arquivos privados. Não substituem testes contra MySQL real ou contra a inicialização pelo Express.
-
-Faltam validar o banco real e a interface em navegador, adicionar relatórios, paginação e autenticação. A inspeção visual e os testes de interação no navegador ficaram pendentes porque o controle do navegador foi bloqueado pelo ambiente. Desempenho, disponibilidade e usabilidade ainda não foram medidos.
-
-Repositório: https://github.com/danibianchi/AcademiaFitZone
+**Disciplina:** Laboratório de Engenharia de Software.

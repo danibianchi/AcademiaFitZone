@@ -80,6 +80,13 @@ function renderizarPlanos() {
     : '<tr><td colspan="5">Nenhum plano cadastrado. Cadastre um plano para vincular alunos.</td></tr>';
 }
 
+function atualizarBotaoVoltar() {
+  const mostrar = estado.tela !== 'atendimento' || historicoTelas.length > 0;
+  $('#botao-voltar').hidden = !mostrar;
+  const rodapeAtendimento = $('#tela-atendimento .rodape-secao');
+  if (rodapeAtendimento) rodapeAtendimento.hidden = !mostrar;
+}
+
 function mostrarTela(tela, empilhar = true) {
   if (empilhar && estado.tela && estado.tela !== tela) {
     historicoTelas.push(estado.tela);
@@ -92,6 +99,7 @@ function mostrarTela(tela, empilhar = true) {
   });
   Object.keys(titulos).forEach(t => { $(`#tela-${t}`).hidden = t !== tela; });
   $('#barra-busca').hidden = !['atendimento', 'alunos'].includes(tela);
+  atualizarBotaoVoltar();
   if (tela === 'historicos') carregarHistoricos().catch(error => mensagem(error.message, true));
 }
 

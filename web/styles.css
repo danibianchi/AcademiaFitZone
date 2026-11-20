@@ -1,11 +1,12 @@
 :root {
   font-family:"Segoe UI",Arial,sans-serif;
-  color:#243248;
-  background:#f4f6f9;
+  color:#f3f0eb;
+  background:#101010;
   font-synthesis:none;
-  --azul:#225aa6;
-  --borda:#dce2eb;
-  --muted:#647287
+  color-scheme:dark;
+  --laranja:#f58b32;
+  --borda:#353230;
+  --muted:#b7b0a8
 }
 * {
   box-sizing:border-box
@@ -20,53 +21,54 @@ button,input,select,textarea {
 button {
   border:1px solid transparent;
   border-radius:6px;
-  background:var(--azul);
-  color:white;
+  background:var(--laranja);
+  color:#18110b;
   padding:10px 15px;
   font-weight:600;
   cursor:pointer;
   line-height:1.25
 }
 button:hover {
-  background:#194a8d
+  background:#ffa34f
 }
 button:disabled {
   opacity:.55;
   cursor:wait
 }
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible {
-  outline:3px solid #609be8;
+  outline:3px solid #ffb16b;
   outline-offset:3px
 }
 .secundario {
-  background:white;
+  background:#1b1b1b;
   border-color:var(--borda);
-  color:#334760
+  color:#e6e1da
 }
 .secundario:hover {
-  background:#edf2f8
+  background:#282522
 }
 .perigo {
-  background:#ac3434
+  background:#a63535;
+  color:#fff2ed
 }
 .perigo:hover {
-  background:#842929
+  background:#bd4545
 }
 .acao-texto {
   background:transparent;
-  color:var(--azul);
+  color:var(--laranja);
   padding:7px 8px;
   font-size:13px
 }
 .acao-texto:hover {
-  background:#edf2f8
+  background:#282522
 }
 .acao-texto.excluir {
-  color:#a52e2e
+  color:#ffacac
 }
 .lateral {
   width:235px;
-  background:#fff;
+  background:#141414;
   border-right:1px solid var(--borda);
   position:fixed;
   inset:0 auto 0 0;
@@ -84,8 +86,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   width:40px;
   height:40px;
   border-radius:9px;
-  background:#225aa6;
-  color:white;
+  background:#f58b32;
+  color:#18110b;
   display:grid;
   place-items:center;
   font-size:17px;
@@ -115,7 +117,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   align-items:center;
   gap:12px;
   background:transparent;
-  color:#54637a;
+  color:#bbb4ac;
   padding:13px 11px;
   font-size:14px
 }
@@ -125,15 +127,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   opacity:.7
 }
 .lateral nav button:hover {
-  background:#f3f6fb
+  background:#24211e
 }
 .lateral nav button[aria-current="page"] {
-  background:#eaf1fb;
-  color:#194e95
+  background:#342719;
+  color:#ffae69
 }
 .rodape-lateral {
   margin-top:auto;
-  color:#49596f;
+  color:#ddd5cc;
   font-size:13px;
   padding:18px 6px 0;
   border-top:1px solid var(--borda)
@@ -149,7 +151,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   width:6px;
   height:6px;
   border-radius:50%;
-  background:#2e9770;
+  background:#8ed4a9;
   margin-right:7px
 }
 .principal {
@@ -157,7 +159,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 .topo {
   padding:27px 37px;
-  background:white;
+  background:#1b1b1b;
   border-bottom:1px solid var(--borda);
   display:flex;
   align-items:center;
@@ -195,10 +197,10 @@ p {
 }
 .etiqueta {
   font-size:12px;
-  background:#edf2f8;
+  background:#282522;
   padding:6px 9px;
   border-radius:4px;
-  color:#42566e;
+  color:#d6cec4;
   white-space:nowrap
 }
 main {
@@ -207,9 +209,9 @@ main {
   margin:auto
 }
 .aviso {
-  background:#fff5da;
-  color:#77520d;
-  border:1px solid #efdfb8;
+  background:#302719;
+  color:#ffd498;
+  border:1px solid #6d512b;
   border-radius:6px;
   padding:12px 15px;
   font-size:13px;
@@ -243,20 +245,20 @@ main {
 .campo label {
   font-size:12px;
   font-weight:600;
-  color:#485970
+  color:#ddd5cc
 }
 input,select,textarea {
-  border:1px solid #cbd4e0;
+  border:1px solid #514b45;
   border-radius:5px;
-  background:#fff;
+  background:#141414;
   padding:10px 11px;
-  color:#243248;
+  color:#f3f0eb;
   width:100%;
   min-height:41px;
   font-size:14px
 }
 input::placeholder {
-  color:#8b96a7
+  color:#a59c92
 }
 input[type="date"] {
   min-width:0
@@ -279,7 +281,7 @@ textarea {
   align-items:start
 }
 .painel {
-  background:white;
+  background:#1b1b1b;
   border:1px solid var(--borda);
   border-radius:8px;
   overflow:hidden
@@ -301,7 +303,7 @@ textarea {
   align-items:center;
   gap:12px;
   padding:17px 20px;
-  border-bottom:1px solid #edf0f5
+  border-bottom:1px solid #353230
 }
 .linha-aluno:last-child {
   border-bottom:none
@@ -309,8 +311,8 @@ textarea {
 .avatar {
   width:36px;
   height:36px;
-  background:#edf2f8;
-  color:#526a89;
+  background:#282522;
+  color:#f5bd8e;
   display:grid;
   place-items:center;
   border-radius:50%;
@@ -338,7 +340,7 @@ textarea {
   padding:8px 10px
 }
 .selecionado {
-  background:#f2f6fd
+  background:#30251b
 }
 .vazio {
   padding:52px 28px;
@@ -347,7 +349,7 @@ textarea {
   font-size:13px
 }
 .vazio h2 {
-  color:#3c4f68;
+  color:#f3f0eb;
   margin:15px 0 8px
 }
 .vazio p {
@@ -357,8 +359,8 @@ textarea {
 .vazio-simbolo {
   display:grid;
   place-items:center;
-  background:#edf2f8;
-  color:#5a7292;
+  background:#282522;
+  color:#f5bd8e;
   border-radius:50%;
   height:51px;
   width:51px;
@@ -411,12 +413,12 @@ dd {
   white-space:nowrap
 }
 .ativo {
-  background:#e8f4ee;
-  color:#27734e
+  background:#1c3426;
+  color:#a0e5b8
 }
 .cancelado {
-  background:#f9eaea;
-  color:#a23c3c
+  background:#3b2224;
+  color:#ffb1b1
 }
 .resultado {
   padding:15px;
@@ -434,19 +436,19 @@ dd {
   margin:0
 }
 .permitido {
-  background:#eef8f2;
-  border-color:#b9dfc7;
-  color:#256140
+  background:#1c3426;
+  border-color:#426c4f;
+  color:#a0e5b8
 }
 .alerta {
-  background:#fff7e4;
-  border-color:#eddbab;
-  color:#77520d
+  background:#302719;
+  border-color:#6d512b;
+  color:#ffd498
 }
 .bloqueado {
-  background:#fff0f0;
-  border-color:#e8bcbc;
-  color:#952f2f
+  background:#3b2224;
+  border-color:#834449;
+  color:#ffb1b1
 }
 .ficha-botoes {
   display:grid;
@@ -485,14 +487,14 @@ table {
 th {
   font-size:11px;
   font-weight:650;
-  color:#62738a;
-  background:#f8fafc;
+  color:#c2b9ae;
+  background:#211e1b;
   padding:14px 18px;
   white-space:nowrap
 }
 td {
   padding:17px 18px;
-  border-top:1px solid #e8edf3;
+  border-top:1px solid #353230;
   vertical-align:middle
 }
 td strong {
@@ -533,7 +535,7 @@ td small {
   display:flex;
   justify-content:space-between;
   font-size:10px;
-  color:#8490a0;
+  color:#aaa095;
   margin-top:30px;
   padding-top:20px;
   border-top:1px solid var(--borda)
@@ -541,15 +543,15 @@ td small {
 #mensagem {
   border-radius:5px;
   padding:12px 15px;
-  background:#e9f4ee;
-  color:#256140;
-  border:1px solid #b9dfc7;
+  background:#1c3426;
+  color:#a0e5b8;
+  border:1px solid #426c4f;
   font-size:13px
 }
 #mensagem.erro {
-  background:#fff0f0;
-  border-color:#e8bcbc;
-  color:#952f2f
+  background:#3b2224;
+  border-color:#834449;
+  color:#ffb1b1
 }
 dialog {
   border:1px solid var(--borda);
@@ -557,11 +559,12 @@ dialog {
   max-height:90vh;
   width:min(540px,calc(100vw - 32px));
   padding:25px;
-  color:#243248;
-  box-shadow:0 15px 60px #14233a20
+  background:#1b1b1b;
+  color:#f3f0eb;
+  box-shadow:0 15px 60px #00000070
 }
 dialog::backdrop {
-  background:#14233a66
+  background:#000000b3
 }
 .dialog-cabecalho {
   display:flex;
@@ -575,13 +578,13 @@ dialog::backdrop {
 }
 .fechar {
   background:transparent;
-  color:#6d7c91;
+  color:#c6bdb3;
   font-size:25px;
   padding:0 5px;
   font-weight:400
 }
 .fechar:hover {
-  background:#f0f3f8
+  background:#302b26
 }
 .duas-colunas {
   display:grid;
@@ -606,14 +609,14 @@ dialog::backdrop {
   font-size:13px
 }
 .erro-form {
-  color:#952f2f;
-  background:#fff0f0;
+  color:#ffb1b1;
+  background:#3b2224;
   border-radius:5px;
   padding:10px 12px;
   font-size:13px
 }
 .resumo {
-  background:#f5f7fb;
+  background:#25211d;
   padding:13px;
   border-radius:5px;
   font-size:13px
@@ -640,7 +643,7 @@ legend {
 .pular:focus {
   position:fixed;
   z-index:10;
-  background:white;
+  background:#1b1b1b;
   padding:15px
 }
 body.ocupado {
@@ -824,12 +827,65 @@ table,.linha-aluno button {
 select {
   appearance:none;
   padding-right:32px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23647287' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23b7b0a8' stroke-width='1.5'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:right 12px center
 }
 @media(max-width:700px) {
   .lateral nav button,.topo-acoes button,.barra-busca>button,.etiqueta {
     font-size:13px
+  }
+}
+/* Identidade visual da FitZone. */
+.simbolo {
+  width:44px;
+  height:44px;
+  border-radius:6px;
+  transform:skew(-5deg);
+}
+.simbolo svg {
+  transform:skew(5deg);
+}
+.marca strong {
+  font-family:"Arial Narrow","Segoe UI",Arial,sans-serif;
+  font-size:26px;
+  font-weight:850;
+  font-style:italic;
+  text-transform:uppercase;
+  color:#f3f0eb;
+}
+.marca-zone {
+  color:var(--laranja);
+}
+.topo {
+  border-top:3px solid var(--laranja);
+}
+.rotulo {
+  color:#f5bd8e;
+}
+h1 {
+  font-size:29px;
+  font-weight:800;
+  letter-spacing:-.8px;
+}
+.lateral nav button[aria-current="page"] {
+  border-left:3px solid var(--laranja);
+}
+input[type="checkbox"] {
+  accent-color:var(--laranja);
+}
+.painel-cabecalho, .historico-bloco h2 {
+  background:#201d1a;
+}
+.pular:focus {
+  background:#1b1b1b;
+  color:#ffb16b;
+}
+@media(max-width:700px) {
+  h1 {
+    font-size:25px;
+  }
+  .marca strong {
+    font-size:24px;
   }
 }

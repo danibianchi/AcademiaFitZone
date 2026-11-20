@@ -9,6 +9,7 @@
   --muted:#b8b1a6;
   --papel:#1b1814;
   --transicao:0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  --altura-barra:94px;
 }
 html {
   scroll-behavior:smooth;
@@ -19,6 +20,7 @@ html {
 body {
   margin:0;
   min-width:320px;
+  padding-top:var(--altura-barra);
 }
 @keyframes aparecerSuave {
   from {
@@ -99,8 +101,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   color:#ffb1aa;
 }
 .barra-clube {
-  position:sticky;
+  position:fixed;
   top:0;
+  left:0;
+  right:0;
   z-index:100;
   display:flex;
   align-items:center;

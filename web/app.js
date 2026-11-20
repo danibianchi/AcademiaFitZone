@@ -537,8 +537,28 @@ $('#aluno-plano').addEventListener('change', atualizarVencimentoInicial);
 $('#aluno-inicio').addEventListener('change', atualizarVencimentoInicial);
 $('#vinculo-plano').addEventListener('change', atualizarResumoVinculo);
 
+const barraClube = $('.barra-clube');
+function ajustarEspacoBarra() {
+  if (!barraClube || barraClube.classList.contains('compacta')) return;
+  document.documentElement.style.setProperty('--altura-barra', `${barraClube.offsetHeight}px`);
+}
+ajustarEspacoBarra();
+window.addEventListener('resize', ajustarEspacoBarra, { passive: true });
+
+let agendadoScroll = false;
 window.addEventListener('scroll', () => {
-  $('.barra-clube')?.classList.toggle('compacta', window.scrollY > 24);
+  if (agendadoScroll) return;
+  agendadoScroll = true;
+  requestAnimationFrame(() => {
+    agendadoScroll = false;
+    if (!barraClube) return;
+    const y = window.scrollY;
+    if (y > 40 && !barraClube.classList.contains('compacta')) {
+      barraClube.classList.add('compacta');
+    } else if (y < 10 && barraClube.classList.contains('compacta')) {
+      barraClube.classList.remove('compacta');
+    }
+  });
 }, { passive: true });
 
 carregarTudo().catch(error => { estado.pronto = false; $('#conexao').textContent = 'Sem conexão'; mensagem(error.message, true); });

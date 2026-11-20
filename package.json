@@ -8,6 +8,8 @@
   "scripts": {
     "start": "node --env-file-if-exists=.env src/server.js",
     "start:demo": "node src/server.js --demo",
+    "start:lan": "node --env-file-if-exists=.env src/server.js --demo --lan",
+    "start:mysql:lan": "node --env-file-if-exists=.env src/server.js --lan",
     "test": "node --test --test-isolation=none",
     "demo": "node examples/atendimento.js"
   },

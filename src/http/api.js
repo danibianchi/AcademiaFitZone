@@ -1,4 +1,5 @@
 import { ErroDeNegocio } from '../domain/erro.js';
+import { mesmaOrigem } from './rede.js';
 
 function normalizar(valor) {
   if (Array.isArray(valor)) return valor.map(normalizar);
@@ -43,7 +44,7 @@ async function lerJson(req) {
   });
 }
 
-export function criarHandler(academia, repositorio, { origemPermitida = '' } = {}) {
+export function criarHandler(academia, repositorio, { origemPermitida = '', redeLocal = false } = {}) {
   const rotas = [
     ['GET', /^\/api\/saude$/, async () => {
       try { await repositorio.ping(); } catch { const erro = new Error('Banco indisponível.'); erro.status = 503; throw erro; }
@@ -70,9 +71,7 @@ export function criarHandler(academia, repositorio, { origemPermitida = '' } = {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     try {
       if (req.headers.origin) {
-        const origensLocais = ['127.0.0.1', 'localhost', '[::1]'].map(h => `http://${h}:${req.socket.localPort}`);
-        const mesmaOrigem = origensLocais.includes(req.headers.origin) && req.headers.origin === `http://${req.headers.host}`;
-        if (!mesmaOrigem && (!origemPermitida || req.headers.origin !== origemPermitida)) return responder(res, 403, { erro: 'ORIGEM_NAO_PERMITIDA', mensagem: 'Origem não permitida.' });
+        if (!mesmaOrigem(req, redeLocal) && (!origemPermitida || req.headers.origin !== origemPermitida)) return responder(res, 403, { erro: 'ORIGEM_NAO_PERMITIDA', mensagem: 'Origem não permitida.' });
         res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
         res.setHeader('Vary', 'Origin');
         if (req.method === 'OPTIONS') {

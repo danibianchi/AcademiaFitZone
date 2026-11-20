@@ -101,6 +101,34 @@ No modo MySQL, o pagamento e a atualização do vencimento usam a mesma transaç
 
 A implementação atual utiliza MySQL2 e JavaScript na interface. A arquitetura documental deverá ser alinhada a essas escolhas ao consolidar o projeto.
 
+## Acessar pela rede local
+
+Para iniciar a demonstração em todas as interfaces IPv4 do computador:
+
+```powershell
+npm.cmd run start:lan
+```
+
+O terminal mostra os endereços disponíveis. Em outro aparelho conectado à mesma rede, abrir `http://IP-DO-COMPUTADOR:3000/`.
+
+Se a porta 3000 já estiver ocupada, escolher outra sem interromper a instância existente:
+
+```powershell
+npm.cmd run start:lan -- --port=3001
+```
+
+Nesse caso, acessar `http://IP-DO-COMPUTADOR:3001/`. Cada processo de demonstração tem seus próprios dados em memória. Para usar MySQL pela rede, executar `npm.cmd run start:mysql:lan`.
+
+O modo de rede aceita os endereços das conexões recebidas pela máquina e mantém a verificação de origem das requisições. Os arquivos privados continuam fora das rotas públicas. O MySQL do Docker permanece publicado apenas no próprio computador.
+
+Se o Windows bloquear conexões de outros aparelhos, executar uma vez em **PowerShell como administrador**, ajustando a porta se necessário:
+
+```powershell
+New-NetFirewallRule -Name 'FitZoneLAN3001' -DisplayName 'FitZone - Rede local (3001)' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3001 -RemoteAddress LocalSubnet -Profile Any -Program (Get-Command node.exe).Source
+```
+
+A regra permite somente clientes da sub-rede local na porta indicada para o Node.js. A aplicação ainda não tem login; usar em uma rede de confiança com dados fictícios.
+
 ## Executar com MySQL
 
 Este modo exige as dependências do projeto e o Docker Desktop em execução.
@@ -153,7 +181,7 @@ Esses testes não substituem a validação com um servidor MySQL real nem os tes
 | **Em validação** | Integração com MySQL/Express e testes de interação no navegador. |
 | **Próximas etapas** | Relatórios, paginação e autenticação. |
 
-Esta versão se destina ao desenvolvimento local com dados fictícios. Ainda não possui autenticação. Desempenho, disponibilidade e usabilidade não foram medidos.
+Esta versão se destina ao desenvolvimento no próprio computador ou em uma rede local de confiança, com dados fictícios. Ainda não possui autenticação. Desempenho, disponibilidade e usabilidade não foram medidos.
 
 ## Referência da API
 

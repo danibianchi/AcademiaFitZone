@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { hostPermitido } from './rede.js';
 
 // Lista fechada: nunca transformar um caminho da requisição em arquivo local.
 const arquivos = new Map([
@@ -11,10 +12,9 @@ const arquivos = new Map([
 ]);
 const raiz = new URL('../../web/', import.meta.url);
 
-export function criarSite(api) {
+export function criarSite(api, { redeLocal = false } = {}) {
   return async (req, res) => {
-    const hosts = ['127.0.0.1', 'localhost', '[::1]'].map(h => `${h}:${req.socket.localPort}`);
-    if (!hosts.includes(req.headers.host)) { res.writeHead(403); return res.end('Host não permitido.'); }
+    if (!hostPermitido(req, redeLocal)) { res.writeHead(403); return res.end('Host não permitido.'); }
     const caminho = new URL(req.url, 'http://localhost').pathname;
     if (caminho.startsWith('/api/')) return api(req, res);
     const arquivo = arquivos.get(caminho);

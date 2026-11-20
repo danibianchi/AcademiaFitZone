@@ -4,13 +4,15 @@ import { criarHandler } from './http/api.js';
 import { criarRepositorioMemoria } from './infrastructure/memoria.js';
 import { conectarMysql } from './infrastructure/mysql.js';
 import { criarSite } from './http/site.js';
+import { isIP } from 'node:net';
+import { networkInterfaces } from 'node:os';
 
 const demonstracao = process.argv.includes('--demo');
-const host = process.env.HOST ?? '127.0.0.1';
-const port = Number(process.env.PORT ?? 3000);
-if (!['127.0.0.1', 'localhost', '::1'].includes(host)) {
-  throw new Error('Esta versão de desenvolvimento deve escutar somente em localhost.');
-}
+const host = process.argv.includes('--lan') ? '0.0.0.0' : process.env.HOST ?? '127.0.0.1';
+const redeLocal = !['127.0.0.1', 'localhost', '::1'].includes(host);
+const portaArgumento = process.argv.find(arg => arg.startsWith('--port='))?.slice(7);
+const port = Number(portaArgumento ?? process.env.PORT ?? 3000);
+if (host !== 'localhost' && !isIP(host)) throw new Error('HOST deve ser um endereço IP ou localhost.');
 if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('PORT inválida.');
 
 try {
@@ -23,7 +25,7 @@ try {
       { nome: 'Anual', valor: '1099.90', duracao_dias: 365 },
     ]) await academia.criarPlano(plano);
   }
-  const handler = criarSite(criarHandler(academia, repo, { origemPermitida: process.env.APP_ORIGIN ?? '' }));
+  const handler = criarSite(criarHandler(academia, repo, { origemPermitida: process.env.APP_ORIGIN ?? '', redeLocal }), { redeLocal });
   let server;
   if (demonstracao) {
     server = createServer(handler);
@@ -43,7 +45,19 @@ try {
     console.error('Não foi possível iniciar a API:', error.code ?? 'ERRO');
     await repo.fechar(); process.exitCode = 1;
   });
-  server.listen(port, host, () => console.log(`FitZone em http://${host === '::1' ? '[::1]' : host}:${port}/ (${repo.modo})`));
+  server.listen(port, host, () => {
+    console.log(`FitZone em http://${host === '::1' ? '[::1]' : host}:${port}/ (${repo.modo})`);
+    if (redeLocal) {
+      console.log(`Neste computador: http://127.0.0.1:${port}/`);
+      try {
+        for (const [nome, enderecos] of Object.entries(networkInterfaces())) {
+          for (const endereco of enderecos ?? []) {
+            if (endereco.family === 'IPv4' && !endereco.internal) console.log(`${nome}: http://${endereco.address}:${port}/`);
+          }
+        }
+      } catch { console.log('Use o IP local deste computador para acessar pela rede.'); }
+    }
+  });
   const encerrar = () => server.close(async () => { await repo.fechar(); });
   process.once('SIGINT', encerrar); process.once('SIGTERM', encerrar);
 } catch (error) {

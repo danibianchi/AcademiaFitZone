@@ -11,10 +11,10 @@
   </head>
   <body>
     <a class="pular" href="#conteudo">Ir para o conteúdo</a>
-    <aside class="lateral">
+    <header class="barra-clube">
       <div class="marca">
         <a href="/" class="logo-link" aria-label="FitZone — início">
-          <img src="/logo-fitzone.svg" alt="FITZONE — Sistema de Gestão" class="logo-img" width="340" height="72">
+          <img src="/logo-fitzone.svg" alt="FITZONE" class="logo-img" width="340" height="48">
         </a>
       </div>
       <nav aria-label="Menu principal">
@@ -23,16 +23,15 @@
         <button type="button" data-tela="planos">Planos</button>
         <button type="button" data-tela="historicos">Históricos</button>
       </nav>
-      <div class="rodape-lateral">Recepção <small>Ambiente de desenvolvimento</small>
-      </div>
-    </aside>
+      <span class="posto">Recepção</span>
+    </header>
     <div class="principal">
       <header class="topo">
         <div>
-          <span class="rotulo">ACADEMIA FITZONE</span>
           <h1 id="titulo-tela">Atendimento</h1>
         </div>
         <div class="topo-acoes">
+          <span id="data-operacional" class="data-operacional"></span>
           <span id="conexao" class="etiqueta">Conectando…</span>
           <button type="button" class="secundario" data-acao="atualizar">Atualizar</button>
         </div>
@@ -70,7 +69,6 @@
             </div>
             <div id="ficha" class="painel ficha">
               <div class="vazio">
-                <span class="vazio-simbolo" aria-hidden="true">FZ</span>
                 <h2>Pronto para atender</h2>
                 <p>Localize um aluno e selecione o cadastro para registrar a entrada ou o pagamento.</p>
               </div>
@@ -124,7 +122,7 @@
         <section id="tela-historicos" aria-label="Históricos" hidden>
           <div id="historicos"></div>
         </section>
-        <footer class="rodape">Sistema de gestão da academia FitZone <span id="data-operacional"></span>
+        <footer class="rodape">FitZone · Gestão da academia
         </footer>
       </main>
     </div>

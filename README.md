@@ -230,7 +230,7 @@ A data operacional vem do servidor no fuso `America/Sao_Paulo`. Os horários ger
 
 ## Autoria e orientação
 
-**Daniela Vanessa Bianchi**
+**Daniela Bianchi**
 
 Aluna do **3º semestre de Análise e Desenvolvimento de Sistemas**, na **FATEC Indaiatuba**.
 

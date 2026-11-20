@@ -9,6 +9,7 @@ const arquivos = new Map([
   ['/formatacao.js', ['formatacao.js', 'text/javascript; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
   ['/logo-fitzone.svg', ['assets/logo-fitzone.svg', 'image/svg+xml; charset=utf-8']],
+  ['/favicon.svg', ['assets/favicon.svg', 'image/svg+xml; charset=utf-8']],
 ]);
 const raiz = new URL('../../web/', import.meta.url);
 

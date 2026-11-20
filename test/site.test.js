@@ -20,7 +20,7 @@ test('Interface e API compartilham origem sem expor arquivos privados', async t 
   assert.equal(pagina.status, 200);
   assert.match(await pagina.text(), /Gestão da academia/);
   assert.match(pagina.headers.get('content-security-policy'), /script-src 'self'/);
-  for (const caminho of ['/app.js', '/styles.css', '/formatacao.js', '/api.js', '/logo-fitzone.svg']) assert.equal((await fetch(origem + caminho)).status, 200);
+  for (const caminho of ['/app.js', '/styles.css', '/formatacao.js', '/api.js', '/logo-fitzone.svg', '/favicon.svg']) assert.equal((await fetch(origem + caminho)).status, 200);
   for (const caminho of ['/.env', '/.git/config', '/package.json', '/src/server.js', '/%2e%2e/.env']) assert.equal((await fetch(origem + caminho)).status, 404);
   const plano = await fetch(origem + '/api/planos', { method: 'POST', headers: { Origin: origem, 'Content-Type': 'application/json' }, body: JSON.stringify({ nome: 'Mensal', valor: '119.90', duracao_dias: 30 }) });
   assert.equal(plano.status, 201);
